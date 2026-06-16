@@ -1,0 +1,13 @@
+{
+  "title": "Workeros — Fix Approval",
+  "instructions": "Self-verified on the preview. Tick the ones you approve, click Generate review, paste it back to me, and I'll close those issues. Reject = leave unchecked + tell me what's wrong.",
+  "items": [
+    {
+      "id": 1218,
+      "title": "Brain split-view divider now runs FULL HEIGHT to the bottom (your 5x point)",
+      "status": "pending",
+      "root_cause": "wrapper used min-h-full (no definite height) so the Collection height:100% couldn't resolve. Collection pages now full-height → divider reaches the bottom. Verified myself.",
+      "screenshot": "screenshot.svg"
+    }
+  ]
+}
