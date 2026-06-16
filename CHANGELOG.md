@@ -17,5 +17,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Example spec and generated page in `example/`.
 - Floom `SKILL.md` for agent integration.
 
-[Unreleased]: https://github.com/floomhq/agent-ui-approval/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/floomhq/agent-ui-approval/releases/tag/v0.1.0
+[Unreleased]: https://github.com/floomhq/approvalui/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/floomhq/approvalui/releases/tag/v0.1.0
