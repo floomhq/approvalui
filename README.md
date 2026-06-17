@@ -13,7 +13,7 @@ ApprovalUI renders a clickable HTML approval page from a simple JSON spec. You o
 
 Binary signal. Screenshot attached. No drift.
 
-![ApprovalUI screenshot](docs/assets/approvalui-screenshot.png)
+![ApprovalUI demo](docs/assets/approvalui-demo.gif)
 
 ---
 
@@ -100,9 +100,13 @@ Only `id` and `title` are required. `root_cause`, `screenshot`, and `instruction
 
 ## Documentation
 
+- [Docs site](https://floomhq.github.io/approvalui/)
 - [Architecture](docs/architecture.md)
 - [Advanced usage](docs/advanced.md)
 - [Troubleshooting](docs/troubleshooting.md)
+- [Claude Code example](docs/examples/claude.md)
+- [Codex example](docs/examples/codex.md)
+- [Kimi example](docs/examples/kimi.md)
 
 ---
 
