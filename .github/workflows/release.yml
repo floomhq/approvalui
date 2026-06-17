@@ -30,8 +30,19 @@ jobs:
       - name: Build distributions
         run: python -m build
 
+      - name: Check for PyPI token
+        id: pypi
+        env:
+          PYPI_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          if [ -n "$PYPI_TOKEN" ]; then
+            echo "has_token=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_token=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Publish to PyPI
-        if: secrets.PYPI_API_TOKEN != ''
+        if: steps.pypi.outputs.has_token == 'true'
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           password: ${{ secrets.PYPI_API_TOKEN }}
