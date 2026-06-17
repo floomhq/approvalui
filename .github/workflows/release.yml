@@ -33,7 +33,7 @@ jobs:
       - name: Check for PyPI token
         id: pypi
         env:
-          PYPI_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
+          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
         run: |
           if [ -n "$PYPI_TOKEN" ]; then
             echo "has_token=true" >> "$GITHUB_OUTPUT"
@@ -45,4 +45,4 @@ jobs:
         if: steps.pypi.outputs.has_token == 'true'
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          password: ${{ secrets.PYPI_API_TOKEN }}
+          password: ${{ secrets.PYPI_TOKEN }}
