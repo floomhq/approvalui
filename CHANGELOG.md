@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-06-17
+
+### Added
+
+- GitHub Pages docs site with demo GIF and agent examples.
+- PyPI publishing via GitHub Actions.
+
 ## [0.1.0] - 2026-06-15
 
 ### Added
@@ -17,5 +24,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Example spec and generated page in `example/`.
 - Floom `SKILL.md` for agent integration.
 
-[Unreleased]: https://github.com/floomhq/approvalui/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/floomhq/approvalui/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/floomhq/approvalui/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/floomhq/approvalui/releases/tag/v0.1.0

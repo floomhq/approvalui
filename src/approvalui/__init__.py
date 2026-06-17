@@ -2,6 +2,6 @@
 
 from approvalui._core import ApprovalUIError, render
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 __all__ = ["ApprovalUIError", "render", "__version__"]
