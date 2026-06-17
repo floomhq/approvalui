@@ -1,8 +1,9 @@
 # ApprovalUI
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](pyproject.toml)
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](pyproject.toml)
 [![Tests](https://github.com/floomhq/approvalui/actions/workflows/ci.yml/badge.svg)](https://github.com/floomhq/approvalui/actions)
+[![PyPI](https://img.shields.io/pypi/v/approvalui.svg)](https://pypi.org/project/approvalui/)
 
 A tiny open-source loop for reviewing UI fixes inside terminal-based AI agents.
 
@@ -11,6 +12,8 @@ Terminal agents are great for code. They are bad at UI feedback, because UI feed
 ApprovalUI renders a clickable HTML approval page from a simple JSON spec. You open it in a browser, tick approve or reject per item, generate a review, and paste it back into the agent.
 
 Binary signal. Screenshot attached. No drift.
+
+![ApprovalUI screenshot](docs/assets/approvalui-screenshot.png)
 
 ---
 
@@ -95,10 +98,18 @@ Only `id` and `title` are required. `root_cause`, `screenshot`, and `instruction
 
 ---
 
+## Documentation
+
+- [Architecture](docs/architecture.md)
+- [Advanced usage](docs/advanced.md)
+- [Troubleshooting](docs/troubleshooting.md)
+
+---
+
 ## Files
 
-- `approvalui.py` — CLI that turns JSON into HTML.
-- `example/` — sample spec, screenshot, and generated page.
+- `src/approvalui/` — the Python package.
+- `example/` — sample spec, screenshot placeholder, and generated page.
 - `SKILL.md` — Floom skill instructions for agent integration.
 
 ---

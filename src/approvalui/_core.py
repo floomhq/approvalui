@@ -1,30 +1,96 @@
-#!/usr/bin/env python3
-"""Generate a self-contained HTML approval page from a JSON spec."""
+"""Core HTML generator and spec validation for ApprovalUI."""
 
-import argparse
-import json
+from __future__ import annotations
+
 import html
-from pathlib import Path
+import json
+from typing import Any
 
 
-def escape(text: str) -> str:
+class ApprovalUIError(Exception):
+    """Raised when the input spec is invalid or generation fails."""
+
+
+def validate_spec(spec: Any) -> None:
+    """Validate that *spec* is a well-formed ApprovalUI JSON spec.
+
+    Raises:
+        ApprovalUIError: If the spec is missing required fields or has invalid types.
+    """
+    if not isinstance(spec, dict):
+        raise ApprovalUIError("Spec must be a JSON object.")
+
+    if "title" not in spec:
+        raise ApprovalUIError("Spec is missing required field: title.")
+    if not isinstance(spec["title"], str):
+        raise ApprovalUIError("Spec field 'title' must be a string.")
+
+    instructions = spec.get("instructions", "")
+    if instructions and not isinstance(instructions, str):
+        raise ApprovalUIError("Spec field 'instructions' must be a string.")
+
+    if "items" not in spec:
+        raise ApprovalUIError("Spec is missing required field: items.")
+    if not isinstance(spec["items"], list):
+        raise ApprovalUIError("Spec field 'items' must be a list.")
+    if not spec["items"]:
+        raise ApprovalUIError("Spec field 'items' must contain at least one item.")
+
+    for idx, item in enumerate(spec["items"]):
+        if not isinstance(item, dict):
+            raise ApprovalUIError(f"Item {idx} must be an object.")
+        if "id" not in item:
+            raise ApprovalUIError(f"Item {idx} is missing required field: id.")
+        if not isinstance(item["id"], (str, int)):
+            raise ApprovalUIError(f"Item {idx} field 'id' must be a string or integer.")
+        if "title" not in item:
+            raise ApprovalUIError(f"Item {idx} is missing required field: title.")
+        if not isinstance(item["title"], str):
+            raise ApprovalUIError(f"Item {idx} field 'title' must be a string.")
+
+        for optional in ("status", "root_cause", "screenshot"):
+            value = item.get(optional)
+            if value is not None and not isinstance(value, str):
+                raise ApprovalUIError(
+                    f"Item {idx} field '{optional}' must be a string if provided."
+                )
+
+
+def _escape(text: Any) -> str:
+    """Return an HTML-escaped string representation of *text*."""
     return html.escape(str(text))
 
 
-def render(spec: dict) -> str:
-    title = escape(spec.get("title", "Approval"))
-    instructions = escape(spec.get("instructions", "Review each item and generate the review."))
-    items = spec.get("items", [])
+def render(spec: dict[str, Any]) -> str:
+    """Render a self-contained HTML approval page from *spec*.
 
-    item_html = []
+    Args:
+        spec: A dictionary conforming to the ApprovalUI JSON spec format.
+
+    Returns:
+        A complete HTML document as a string.
+
+    Raises:
+        ApprovalUIError: If the spec is invalid.
+    """
+    validate_spec(spec)
+
+    title = _escape(spec.get("title", "Approval"))
+    instructions = _escape(spec.get("instructions", "Review each item and generate the review."))
+    items = spec["items"]
+
+    item_html: list[str] = []
     for item in items:
-        item_id = escape(item.get("id", ""))
-        item_title = escape(item.get("title", ""))
-        root_cause = escape(item.get("root_cause", ""))
-        screenshot = escape(item.get("screenshot", ""))
-        screenshot_tag = f'<img src="{screenshot}" alt="screenshot" class="screenshot" />' if screenshot else ""
+        item_id = _escape(item["id"])
+        item_title = _escape(item["title"])
+        root_cause = _escape(item.get("root_cause", ""))
+        screenshot = _escape(item.get("screenshot", ""))
+        screenshot_tag = (
+            f'<img src="{screenshot}" alt="screenshot" class="screenshot" />' if screenshot else ""
+        )
 
-        item_html.append(f"""
+        item_html.append(
+            f"""
         <div class="item" data-id="{item_id}">
             <div class="header">
                 <label><input type="radio" name="status-{item_id}" value="approve" /> Approve</label>
@@ -37,9 +103,12 @@ def render(spec: dict) -> str:
                 <textarea class="comment" placeholder="Comment if rejecting..."></textarea>
             </div>
         </div>
-        """)
+        """
+        )
 
-    items_json = json.dumps([{"id": i.get("id", ""), "title": i.get("title", "")} for i in items])
+    items_json = json.dumps(
+        [{"id": str(item["id"]), "title": str(item["title"])} for item in items]
+    )
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -70,7 +139,7 @@ def render(spec: dict) -> str:
     <h1>{title}</h1>
     <p class="subtitle">{instructions}</p>
 
-    {''.join(item_html)}
+    {"".join(item_html)}
 
     <div class="actions">
         <button class="primary" onclick="generateReview()">Generate review →</button>
@@ -106,19 +175,3 @@ def render(spec: dict) -> str:
     </script>
 </body>
 </html>"""
-
-
-def main():
-    parser = argparse.ArgumentParser(description="Generate an HTML approval page from a JSON spec.")
-    parser.add_argument("input", help="Path to JSON spec")
-    parser.add_argument("output", help="Path to write HTML file")
-    args = parser.parse_args()
-
-    spec = json.loads(Path(args.input).read_text())
-    html_output = render(spec)
-    Path(args.output).write_text(html_output)
-    print(f"Wrote {args.output}")
-
-
-if __name__ == "__main__":
-    main()
